@@ -93,7 +93,7 @@ export const login = catchAsyncErrors(async (req, res, next) => {
 });
 
 export const addNewAdmin = catchAsyncErrors(async (req, res, next) => {
-  const { firstName, lastName, email, phone,  dob, gender, password } =
+  const { firstName, lastName, email, phone,  age, gender, password,cpassword } =
     req.body;
   if (
     !firstName ||
@@ -101,9 +101,10 @@ export const addNewAdmin = catchAsyncErrors(async (req, res, next) => {
     !email ||
     !phone ||
     
-    !dob ||
+    !age ||
     !gender ||
-    !password
+    !password||
+    !cpassword
   ) {
     return next(new ErrorHandler("Please Fill Full Form!", 400));
   }
@@ -119,9 +120,10 @@ export const addNewAdmin = catchAsyncErrors(async (req, res, next) => {
     email,
     phone,
    
-    dob,
+    age,
     gender,
     password,
+    cpassword,
     role: "Admin",
   });
   res.status(200).json({
@@ -132,11 +134,11 @@ export const addNewAdmin = catchAsyncErrors(async (req, res, next) => {
 });
 
 export const addNewDoctor = catchAsyncErrors(async (req, res, next) => {
-  if (!req.files || Object.keys(req.files).length === 0) {
-    return next(new ErrorHandler("Doctor Avatar Required!", 400));
+  if (!req.files) {
+    return next(new ErrorHandler("Doctor Profile Picture Required!", 400));
   }
   const { docAvatar } = req.files;
-  const allowedFormats = ["image/png","image/jpg", "image/jpeg", "image/webp"];
+  const allowedFormats = ["image/png","image/jpg", "image/jpeg", "image/webp", "image/avif"];
   if (!allowedFormats.includes(docAvatar.mimetype)) {
     return next(new ErrorHandler("File Format Not Supported!", 400));
   }
@@ -145,10 +147,11 @@ export const addNewDoctor = catchAsyncErrors(async (req, res, next) => {
     lastName,
     email,
     phone,
-  
+  age,
     
     gender,
     password,
+    cpassword,
     doctorDepartment,
   } = req.body;
   if (
@@ -156,9 +159,10 @@ export const addNewDoctor = catchAsyncErrors(async (req, res, next) => {
     !lastName ||
     !email ||
     !phone ||
-
+    !age||
     !gender ||
     !password ||
+    !cpassword||
     !doctorDepartment ||
     !docAvatar
   ) {
@@ -187,10 +191,11 @@ export const addNewDoctor = catchAsyncErrors(async (req, res, next) => {
     lastName,
     email,
     phone,
-    
+    age,
   
     gender,
     password,
+    cpassword,
     role: "Doctor",
     doctorDepartment,
     docAvatar: {
